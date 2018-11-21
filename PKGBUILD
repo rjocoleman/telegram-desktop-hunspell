@@ -4,14 +4,17 @@
 # Thanks Nicholas Guriev <guriev-ns@ya.ru> for the patches!
 # https://github.com/mymedia2/tdesktop
 
-pkgname=telegram-desktop
+# Hunspell patch from https://github.com/zaps166/tdesktop-hunspell/
+
+pkgname=telegram-desktop-hunspell
 pkgver=1.4.3
 pkgrel=1
-pkgdesc='Official Telegram Desktop client'
+pkgdesc='Official Telegram Desktop client (with unofficial Hunspell patch)'
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL3')
-depends=('ffmpeg' 'hicolor-icon-theme' 'minizip' 'openal' 'qt5-base' 'qt5-imageformats' 'openssl')
+conflicts=('telegram-desktop')
+depends=('ffmpeg' 'hicolor-icon-theme' 'minizip' 'openal' 'qt5-base' 'qt5-imageformats' 'openssl' 'hunspell')
 makedepends=('cmake' 'git' 'gyp' 'range-v3' 'python' 'libappindicator-gtk3')
 optdepends=('libnotify: desktop notifications')
 source=(
@@ -27,6 +30,7 @@ source=(
     "tdesktop.patch"
     "no-gtk2.patch"
     "libtgvoip.patch"
+    "hunspell.patch"
 )
 sha512sums=('SKIP'
             'SKIP'
@@ -39,7 +43,8 @@ sha512sums=('SKIP'
             'b20674f61ff6378749d1f59a6a0da194d33ccc786bd783f6ed62027924a3a8a8d27c9763bf376480432d6536896b0c7eeb8c495c5b8cefff7cf5fe84da50947e'
             '47c0d1e00401d7899b2ce710c06ceac6caffddbe1a4c85bc407918b43051cba292f6e6131cc0f390a66520e92f0ffa3761f8d973a25986dfe21c54f113062c33'
             '7a37e0ca582145a56a411585aec0bc94889dc18a80cc038d2efa237e19eebf8b67d56825e068be88f7566b08316ce068d7f20c25729caa33d0e9d6c370325025'
-            'd60694dc701aa985b0e82a12c9732b945082470441c687b33167a94f94efcf253baf43bb7280ec160ba338485ee5c62de138e4804cae05f27cc5cf4298166d39')
+            'd60694dc701aa985b0e82a12c9732b945082470441c687b33167a94f94efcf253baf43bb7280ec160ba338485ee5c62de138e4804cae05f27cc5cf4298166d39'
+            'c41aceb171fb5cebaa08c8213de7aa8452f8aaacb1e55c563fc8bb9848e97cba237a6daf5ceefae117157b85d5ca72a49589fc1468a8b8fe2789a8eb5216f2cc')
 
 prepare() {
     cd "$srcdir/tdesktop"
@@ -53,6 +58,7 @@ prepare() {
     git submodule update
 
     patch -Np1 -i "$srcdir/tdesktop.patch"
+    patch -Np1 -i "$srcdir/hunspell.patch"
     patch -Np1 -i "$srcdir/no-gtk2.patch"
 
     cd "Telegram/ThirdParty/libtgvoip"
